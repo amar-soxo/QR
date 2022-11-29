@@ -1,4 +1,9 @@
 {
   "name": "rnQr",
-  "displayName": "rnQr"
+  "displayName": "rnQr",
+  "extra": {
+    "eas": {
+      "projectId": "42f5cb5a-0c81-4aaf-9c35-2c59250dea63"
+    }
+  }
 }
