@@ -1,0 +1,80 @@
+function Scanner({onRead, qrManual, toggleQr}) {
+  const [value, setValue] = React.useState('');
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const {status} = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    };
+
+    getBarCodeScannerPermissions();
+  }, []);
+
+  const handleBarCodeScanned = ({type, data}) => {
+    setScanned(true);
+    onSuccess(data);
+    setScanned();
+    alert(scanned);
+  };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  return (
+    <>
+      <Modal
+        visible={qrManual}
+        onRequestClose={() => {
+          toggleQr();
+        }}>
+        <SafeAreaView>
+          <BarCodeScanner
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+            style={StyleSheet.absoluteFillObject}
+          />
+          {scanned && (
+            <Button
+              title={'Tap to Scan Again'}
+              onPress={() => setScanned(false)}
+            />
+          )}
+          <View style={{height: '100%', padding: 25}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 20,
+              }}>
+              <KittenText category="p1">
+                Update the patients events manually.
+              </KittenText>
+            </View>
+            <View style={{marginTop: 15}}>
+              <Input
+                label="OP No."
+                placeholder="Place your Text"
+                value={value}
+                onChangeText={nextValue => setValue(nextValue)}
+              />
+            </View>
+            <View style={{marginTop: 15, alignItems: 'flex-start'}}>
+              <Button
+                style={{fontSize: 14, marginBottom: 15}}
+                size="small"
+                onPress={() => onSuccess(value)}>
+                SUBMIT
+              </Button>
+            </View>
+          </View>
+        </SafeAreaView>
+      </Modal>
+    </>
+  );
+}

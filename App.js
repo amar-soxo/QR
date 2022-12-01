@@ -1,55 +1,99 @@
+import * as React from 'react';
 
-import {StyleSheet, Text, View, Button} from 'react-native';
-import React, {useEffect} from 'react';
-import {BarCodeScanner} from 'expo-barcode-scanner';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {Provider, connect} from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import {combineReducers} from 'redux';
+import * as eva from '@eva-design/eva';
+import {ApplicationProvider} from '@ui-kitten/components';
 
-export default function App() {
-  const [hasPermission, setHasPermission] = React.useState(false);
-  const [scanData, setScanData] = React.useState();
+import LoginScreen from './screens/Login';
+import {loginReducer} from './screens/Login';
+import HomeScreen from './screens/Home';
+import {homeReducer} from './screens/Home';
+import ReportScreen from './screens/Report';
+import {reportReducer} from './screens/Report';
+import {EvaIconsPack} from '@ui-kitten/eva-icons';
+import {IconRegistry} from '@ui-kitten/components';
 
-  useEffect(() => {
-    (async () => {
-      const {status} = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
+export const AuthContext = React.createContext();
+const Stack = createStackNavigator();
+
+const red = combineReducers({
+  loginReducer,
+  homeReducer,
+  reportReducer,
+});
+
+const store = createStore(red, applyMiddleware());
+
+const Nav = ({navigation, userToken, restoreToken}) => {
+  React.useEffect(() => {
+    const bootstrapAsync = async () => {
+      let storedUserToken;
+      try {
+        storedUserToken = await AsyncStorage.getItem('userToken');
+      } catch (e) {
+        // Restoring token failed
+      }
+      restoreToken(JSON.parse(storedUserToken));
+    };
+    bootstrapAsync();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!hasPermission) {
-    return (
-      <View style={styles.container}>
-        <Text>Please grant camera permissions to app.</Text>
-      </View>
-    );
-  }
-
-  const handleBarCodeScanned = ({type, data}) => {
-    setScanData(data);
-    alert(`Data: ${data}`);
-  };
-
   return (
-    <View style={styles.container}>
-      <BarCodeScanner
-        barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-        style={StyleSheet.absoluteFillObject}
-        onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
-      />
-      {scanData && (
-        <Button
-          title="Scan Again?"
-          onPress={() => setScanData(undefined)}
-          color="#007cff"
-        />
-      )}
-    </View>
+    <NavigationContainer>
+      <IconRegistry icons={EvaIconsPack} />
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        {userToken == null ? (
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Report" component={ReportScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function mapStateToProps(state) {
+  return {
+    isLoading: state.loginReducer.isLoading,
+    isSignout: state.loginReducer.isSignout,
+    userToken: state.loginReducer.userToken,
+  };
+}
+function bindAction(dispatch) {
+  return {
+    restoreToken: (user) => {
+      dispatch({type: 'RESTORE_TOKEN', user});
+    },
+  };
+}
+const App = connect(mapStateToProps, bindAction)(Nav);
+
+const Root = ({navigation}) => {
+  return (
+    <ApplicationProvider {...eva} theme={eva.light}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ApplicationProvider>
+  );
+};
+
+
+
+// export default Root;
+export default Root;
