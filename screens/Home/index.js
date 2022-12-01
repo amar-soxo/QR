@@ -26,6 +26,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo'
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {StatusBar} from 'expo-status-bar';
 
@@ -363,7 +364,8 @@ const HomeScreen = ({
           signOut();
         }}
         style={styles.fabLogout}>
-        <Icon size={40} name="sign-out" color="#01a699" />
+        {/* <Icon size={40} name="sign-out" color="#01a699" /> */}
+        <Entypo name='log-out' style={{color: '#01a699', fontSize: 50}} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -559,7 +561,7 @@ function QrScanner({onRead, qrScannerFlag, toggleQrScannerFlag}) {
     };
 
     getBarCodeScannerPermissions();
-  }, []);
+  }, [qrScannerFlag]);
 
   const handleBarCodeScanned = ({type, data}) => {
     setScanned(true);
@@ -597,7 +599,7 @@ function QrScanner({onRead, qrScannerFlag, toggleQrScannerFlag}) {
 
 function CustomCard({onRead, cardList, navigation, selectPatnt}) {
   return (
-    <>
+    <View>
       {cardList.map((item, index) => {
         return (
           <Card
@@ -675,6 +677,6 @@ function CustomCard({onRead, cardList, navigation, selectPatnt}) {
           </Card>
         );
       })}
-    </>
+    </View>
   );
 }
