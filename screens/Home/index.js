@@ -35,12 +35,14 @@ import {StatusBar} from 'expo-status-bar';
 const handle = {
   GCI: [17, 24],
   BCM: [18, 25],
-  COLP: [35],
+  COLP: [14],
   Mamo: [31],
   Oral: [19, 26],
   CT: [21, 28],
-  BD: [33, 30],
-  DP: [34, 36],
+  BD: [30, 33],
+  DP: [16, 34, 38],
+  EYE: [35, 39],
+  ECG: [36, 40]
 };
 
 const wait = timeout => {
@@ -310,6 +312,7 @@ const HomeScreen = ({
           marginBottom: 20,
         }}>
         <KittenText
+          category="h2"
           style={{
             textAlign: 'left',
             fontWeight: 'bold',
@@ -318,11 +321,10 @@ const HomeScreen = ({
             marginBottom: 10,
             paddingHorizontal: 20,
           }}
-          category="h1">
+        >
           Guests
         </KittenText>
-        <Text style={styles.headline}>Guests</Text>
-        <Text
+        <KittenText
           style={{
             fontSize: 22,
             marginTop: 20,
@@ -330,7 +332,7 @@ const HomeScreen = ({
             paddingHorizontal: 20,
           }}>
           {userToken ? userToken.StaffName : null}
-        </Text>
+        </KittenText>
       </View>
       <ScrollView
         style={styles.container}
@@ -339,7 +341,7 @@ const HomeScreen = ({
         }>
         {refreshing ? (
           <View>
-            <Text style={{textAlign: 'center'}}>Refreshing ...</Text>
+            <KittenText style={{textAlign: 'center'}}>Refreshing ...</KittenText>
           </View>
         ) : patntList && patntList[0] ? (
           <CustomCard
@@ -349,7 +351,7 @@ const HomeScreen = ({
           />
         ) : (
           <View style={{}}>
-            <Text style={{textAlign: 'center', fontSize: 18}}>No Record</Text>
+            <KittenText style={{textAlign: 'center', fontSize: 18}}>No Record</KittenText>
           </View>
         )}
       </ScrollView>

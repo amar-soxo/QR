@@ -78,9 +78,9 @@ const ReportScreen = ({
       )}
 
       <SafeAreaView style={styles.safeArea}>
-        <Text style={styles.headline}>
+        <KittenText style={styles.headline}>
           Reports of {patnt.Title + ' ' + patnt.Fname + ' ' + patnt.Lname}
-        </Text>
+        </KittenText>
 
         <Card
           style={{
@@ -186,6 +186,7 @@ const ReportScreen = ({
                         : '0'
                       : '0'
                     : '0';
+                  console.log(desc);
                   return {
                     time: time + ' min',
                     title: item.SubEvent,
