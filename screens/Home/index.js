@@ -26,7 +26,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Entypo from 'react-native-vector-icons/Entypo'
+import Entypo from 'react-native-vector-icons/Entypo';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import {StatusBar} from 'expo-status-bar';
 
@@ -309,6 +309,18 @@ const HomeScreen = ({
           justifyContent: 'space-between',
           marginBottom: 20,
         }}>
+        <KittenText
+          style={{
+            textAlign: 'left',
+            fontWeight: 'bold',
+            fontSize: 22,
+            marginTop: 20,
+            marginBottom: 10,
+            paddingHorizontal: 20,
+          }}
+          category="h1">
+          Guests
+        </KittenText>
         <Text style={styles.headline}>Guests</Text>
         <Text
           style={{
@@ -319,17 +331,6 @@ const HomeScreen = ({
           }}>
           {userToken ? userToken.StaffName : null}
         </Text>
-        {/* <Layout style={{ fontSize: 22, marginTop: 15 }} level='1'>
-                    <OverflowMenu
-                        anchor={renderToggleButton}
-                        visible={visible}
-                        // selectedIndex={selectedIndex}
-                        onSelect={onItemSelect}
-                        onBackdropPress={() => setVisible(false)}
-                    >
-                        <MenuItem title='Logout' />
-                    </OverflowMenu>
-                </Layout> */}
       </View>
       <ScrollView
         style={styles.container}
@@ -365,7 +366,7 @@ const HomeScreen = ({
         }}
         style={styles.fabLogout}>
         {/* <Icon size={40} name="sign-out" color="#01a699" /> */}
-        <Entypo name='log-out' style={{color: '#01a699', fontSize: 50}} />
+        <Entypo name="log-out" style={{color: '#01a699', fontSize: 50}} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -554,7 +555,7 @@ function QrScanner({onRead, qrScannerFlag, toggleQrScannerFlag}) {
   const [scanned, setScanned] = useState(false);
 
   useEffect(() => {
-    setScanned(false)
+    setScanned(false);
     const getBarCodeScannerPermissions = async () => {
       const {status} = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
@@ -566,7 +567,7 @@ function QrScanner({onRead, qrScannerFlag, toggleQrScannerFlag}) {
   const handleBarCodeScanned = ({type, data}) => {
     setScanned(true);
     onRead(data);
-    toggleQrScannerFlag()
+    toggleQrScannerFlag();
   };
 
   if (hasPermission === null) {
@@ -613,7 +614,7 @@ function CustomCard({onRead, cardList, navigation, selectPatnt}) {
             key={index}
             onPress={() => {
               selectPatnt(item);
-              navigation.navigate('Report');
+              return navigation.navigate('Report');
             }}>
             {/* <Text>{item.Title + ' ' + item.Fname + ' ' + item.Lname}</Text> */}
             {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}> */}

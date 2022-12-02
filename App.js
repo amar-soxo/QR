@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import {NavigationContainer} from '@react-navigation/native';
+// import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider, connect} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import {combineReducers} from 'redux';
@@ -19,7 +21,7 @@ import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {IconRegistry} from '@ui-kitten/components';
 
 export const AuthContext = React.createContext();
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const red = combineReducers({
   loginReducer,
@@ -76,7 +78,7 @@ function mapStateToProps(state) {
 }
 function bindAction(dispatch) {
   return {
-    restoreToken: (user) => {
+    restoreToken: user => {
       dispatch({type: 'RESTORE_TOKEN', user});
     },
   };
@@ -92,8 +94,6 @@ const Root = ({navigation}) => {
     </ApplicationProvider>
   );
 };
-
-
 
 // export default Root;
 export default Root;
